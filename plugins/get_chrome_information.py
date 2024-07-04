@@ -12,9 +12,9 @@ from dotenv import load_dotenv
 # Load environment variables
 dotenv_path = Path('env/.env')
 load_dotenv(dotenv_path=dotenv_path)
-DISCORD_WEBHOOK_URL = os.getenv("")
-TELEGRAM_BOT_TOKEN = os.getenv("")
-TELEGRAM_CHAT_ID = os.getenv("")
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 windows_enviroment = {
     'app_local': 'LOCALAPPDATA',
