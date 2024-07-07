@@ -28,6 +28,7 @@
 - **Data Transmission**: Sends collected data to configured Discord and Telegram webhooks.
 - **Cleanup**: Deletes temporary files after data transmission to maintain privacy.
 - **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
+  ![Image Description](images/ui.png)
 
 ## Use Cases
 
@@ -52,6 +53,8 @@ S124-Info-Stealers/
 │   ├── wifi_passwords.py     # Retrieves Wi-Fi passwords
 │
 ├── main.py                   # Main script orchestrating the workflow
+├── create_ui.py
+├── env_manager.py    
 │
 └── README.md                 # This readme file
 ```
