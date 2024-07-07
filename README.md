@@ -28,6 +28,7 @@
 - **Data Transmission**: Sends collected data to configured Discord and Telegram webhooks.
 - **Cleanup**: Deletes temporary files after data transmission to maintain privacy.
 - **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
+  
   ![Image Description](images/ui.png)
 
 ## Use Cases
