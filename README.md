@@ -27,6 +27,7 @@
 - **Wi-Fi Password Retrieval**: Retrieves saved Wi-Fi passwords from the system.
 - **Data Transmission**: Sends collected data to configured Discord and Telegram webhooks.
 - **Cleanup**: Deletes temporary files after data transmission to maintain privacy.
+- **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
 
 ## Use Cases
 
