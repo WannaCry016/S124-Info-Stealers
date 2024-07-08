@@ -57,6 +57,7 @@ S124-Info-Stealers/
 ├── create_ui.py
 ├── env_manager.py    
 │
+├── requirements.txt 
 └── README.md                 # This readme file
 ```
 
