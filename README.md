@@ -30,6 +30,7 @@
 - **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
   
   ![Image Description](images/ui.png)
+  ![Image Description](images/Screenshot 2024-07-11 172409.png)
 
 ## Use Cases
 
