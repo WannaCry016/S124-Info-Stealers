@@ -29,8 +29,7 @@
 - **Cleanup**: Deletes temporary files after data transmission to maintain privacy.
 - **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
   
-  ![Image Description](images/ui.png)
-  ![Image Description](images/ui2.png)
+  ![Image Description](images/ui.png)   ![Image Description](images/ui2.png)
 
 ## Use Cases
 
